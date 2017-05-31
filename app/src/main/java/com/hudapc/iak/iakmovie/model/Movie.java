@@ -21,7 +21,7 @@ public class Movie
     boolean video;
     float vote_average;
 
-    public Movie(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

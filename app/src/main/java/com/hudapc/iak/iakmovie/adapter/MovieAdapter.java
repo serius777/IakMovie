@@ -26,10 +26,16 @@ import java.util.zip.Inflater;
 public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHolder>
 {
     List<Movie> list;
+    ClickListenerRecycler listener;
 
     public MovieAdapter(List<Movie> list)
     {
         this.list = list;
+    }
+
+    public void setListener(ClickListenerRecycler listener)
+    {
+        this.listener = listener;
     }
 
     @Override
@@ -54,14 +60,21 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         return list.size();
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         ImageView imPoster;
+
+        @Override
+        public void onClick(View v)
+        {
+            listener.onItemClick(list.get(getAdapterPosition()));
+        }
 
         public MovieViewHolder(View itemView)
         {
             super(itemView);
             imPoster = (ImageView) itemView.findViewById(R.id.iv_poster);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Movie data)
@@ -70,12 +83,11 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
                     load(APIConfig.getMoviePosterURL("w342",
                             data.getPoster_path())).
                     into(imPoster);
-
-//            imPoster.setImageDrawable(
-//                    ResourcesCompat.getDrawable(itemView.getResources(),
-//                            R.drawable.dummy_poster,
-//                            null)
-//            );
         }
+    }
+
+    public interface ClickListenerRecycler
+    {
+        public void onItemClick(Movie data);
     }
 }
